@@ -1,25 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ViewMover : MonoBehaviour {
-    public int speed = 0;
-
-    // Start is called before the first frame update
-    void Start () {
-
-    }
+    public int speed = 1;
 
     // Update is called once per frame
     void Update () {
         // Get input data from keyboard or controller
-        float moveHorizontal = Input.GetAxis ("Horizontal");
-        float moveVertical = Input.GetAxis ("Vertical");
+        double directionalSpeed = Input.GetAxis ("Vertical");
+        double rotationalSpeed = Input.GetAxis ("Horizontal");
+        double multiplier = this.speed * Time.deltaTime;
 
-        // Update player position based on input
+        // Get the current postion and rotation
         Vector3 position = this.transform.position;
-        position.x += moveHorizontal * this.speed * Time.deltaTime;
-        position.z += moveVertical * this.speed * Time.deltaTime;
+        Vector3 rotation = this.transform.rotation.eulerAngles;
+
+        // Rotate based on the horizontal input
+        rotation.y += (float) (rotationalSpeed * 25 * multiplier);
+        double rotationRadian = Math.PI * rotation.y / 180.0;
+
+        // Use trigonometry to adjust the position based ont he current direction
+        double xVector = Math.Sin (rotationRadian);
+        double zVector = Math.Cos (rotationRadian);
+        position.x += (float) (directionalSpeed * xVector * multiplier);
+        position.z += (float) (directionalSpeed * zVector * multiplier);
+
+        // Update the object
         this.transform.position = position;
+        this.transform.rotation = Quaternion.Euler (rotation);
     }
 }
