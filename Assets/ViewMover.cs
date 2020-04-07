@@ -17,7 +17,8 @@ public class ViewMover : MonoBehaviour {
 
         // Rotate based on the horizontal input
         rotation.y += (float) (rotationalSpeed * 25 * multiplier);
-        double rotationRadian = Math.PI * rotation.y / 180.0;
+        Transform camera = this.transform.Find ("Main Camera");
+        double rotationRadian = Math.PI * (camera.transform.rotation.eulerAngles.y) / 180.0;
 
         // Use trigonometry to adjust the position based ont he current direction
         double xVector = Math.Sin (rotationRadian);
