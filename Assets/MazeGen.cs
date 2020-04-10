@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MazeGen : MonoBehaviour {
     public GameObject wallObject = null;
-    public int size = 10;
+    public Vector2Int size = new Vector2Int (10, 10);
 
     public GameObject startObject = null;
     public GameObject finishObject = null;
@@ -25,14 +25,12 @@ public class MazeGen : MonoBehaviour {
     }
 
     void Start () {
-        // Adjust the bounds to start 1 in from the edge
-        int bounds = (this.size / 2) - 1;
         System.Random rnd = new System.Random ();
 
         // Create the empty maze grid
-        MazeCell[, ] cells = new MazeCell[this.size, this.size];
-        for (int x = 0; x < this.size; x++) {
-            for (int z = 0; z < this.size; z++) {
+        MazeCell[, ] cells = new MazeCell[this.size.x, this.size.y];
+        for (int x = 0; x < this.size.x; x++) {
+            for (int z = 0; z < this.size.y; z++) {
                 MazeCell cell = new MazeCell ();
                 cell.coords = new Vector2 (x, z);
                 cell.walls = MazeWall.All;
@@ -43,7 +41,7 @@ public class MazeGen : MonoBehaviour {
 
         // Start and finish are opposite sides, 3 up/down from the corner
         Vector2 start = new Vector2 (0, 2);
-        Vector2 finish = new Vector2 (this.size - 1, this.size - 3);
+        Vector2 finish = new Vector2 (this.size.x - 1, this.size.y - 3);
 
         // Move the start and finish markers
         this.startObject.transform.position = this.GetCellPosition (start);
@@ -57,7 +55,7 @@ public class MazeGen : MonoBehaviour {
         // Create a stack for the path
         Stack<Vector2> path = new Stack<Vector2> ();
         path.Push (finish);
-        int attempts = this.size * this.size * 10; // Allow 10x the number of cells 
+        int attempts = this.size.x * this.size.y * 10; // Allow 10x the number of cells 
         while (path.Count > 0 && attempts++ > 0) {
             // Current coords/cell
             Vector2 currentCoords = path.Peek ();
@@ -69,9 +67,9 @@ public class MazeGen : MonoBehaviour {
 
             // If no unvisited neighbours, remove from stack, and try the previous one again
             int remainingNeighbours = 4;
-            if (currentCoords.y >= this.size - 1 || cells[(int) currentCoords.x, (int) currentCoords.y + 1].visited) { remainingNeighbours--; }
+            if (currentCoords.y >= this.size.y - 1 || cells[(int) currentCoords.x, (int) currentCoords.y + 1].visited) { remainingNeighbours--; }
             if (currentCoords.y <= 0 || cells[(int) currentCoords.x, (int) currentCoords.y - 1].visited) { remainingNeighbours--; }
-            if (currentCoords.x >= this.size - 1 || cells[(int) currentCoords.x + 1, (int) currentCoords.y].visited) { remainingNeighbours--; }
+            if (currentCoords.x >= this.size.x - 1 || cells[(int) currentCoords.x + 1, (int) currentCoords.y].visited) { remainingNeighbours--; }
             if (currentCoords.x <= 0 || cells[(int) currentCoords.x - 1, (int) currentCoords.y].visited) { remainingNeighbours--; }
             if (remainingNeighbours == 0) {
                 // Backtrack
@@ -85,7 +83,7 @@ public class MazeGen : MonoBehaviour {
             MazeWall neighbourWall = MazeWall.None;
             switch ((int) rnd.Next (0, 4)) {
                 case 0: // Up
-                    if (currentCoords.y < this.size - 1) {
+                    if (currentCoords.y < this.size.y - 1) {
                         neighbourCoords = new Vector2 (currentCoords.x, currentCoords.y + 1);
                         neighbourCell = cells[(int) neighbourCoords.x, (int) neighbourCoords.y];
                     }
@@ -101,7 +99,7 @@ public class MazeGen : MonoBehaviour {
                     neighbourWall = MazeWall.Up;
                     break;
                 case 2: // Right
-                    if (currentCoords.x < this.size - 1) {
+                    if (currentCoords.x < this.size.x - 1) {
                         neighbourCoords = new Vector2 (currentCoords.x + 1, currentCoords.y);
                         neighbourCell = cells[(int) neighbourCoords.x, (int) neighbourCoords.y];
                     }
@@ -131,8 +129,8 @@ public class MazeGen : MonoBehaviour {
 
         // Add all the walls
         // Each cell only adds it's top right walls, unless it's on the bottom row, or left column
-        for (int x = 0; x < this.size; x++) {
-            for (int z = 0; z < this.size; z++) {
+        for (int x = 0; x < this.size.x; x++) {
+            for (int z = 0; z < this.size.y; z++) {
                 MazeWall walls = cells[x, z].walls;
                 Vector3 position = this.GetCellPosition (new Vector2 (x, z));
 
@@ -168,7 +166,7 @@ public class MazeGen : MonoBehaviour {
     private Vector3 GetCellPosition (Vector2 cellCoords) {
         Vector3 cellPosition = new Vector3 (cellCoords.x, 0, cellCoords.y); // The cell's bottom left corner
         Vector3 objectPosition = this.transform.position; // Poition of the "maze" game object
-        Vector3 objectOffset = new Vector3 (-(this.size / 2), 0, -(this.size / 2)); // Adjust from 0 - 9 to -5 - +4
+        Vector3 objectOffset = new Vector3 (-(this.size.x / 2), 0, -(this.size.y / 2)); // Adjust from 0 - 9 to -5 - +4
         Vector3 centerOffset = new Vector3 (0.5f, 0, 0.5f); // Center of the cell
         return cellPosition + objectPosition + objectOffset + centerOffset;
     }

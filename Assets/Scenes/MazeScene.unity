@@ -319,7 +319,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallObject: {fileID: 2643598850304147602, guid: 37b09d0f53f0c4a46a2f362e567c57d7,
     type: 3}
-  size: 10
+  size: {x: 10, y: 10}
   startObject: {fileID: 627424577}
   finishObject: {fileID: 247314253}
 --- !u!1 &534669902
