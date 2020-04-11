@@ -177,7 +177,7 @@ public class MazeGen : MonoBehaviour {
         return this.GetCellPosition (cell.coords);
     }
 
-    private Vector3 GetCellPosition (Vector2Int cellCoords) {
+    internal Vector3 GetCellPosition (Vector2Int cellCoords) {
         Vector3 position = new Vector3 (cellCoords.x, 0, cellCoords.y); // Start off with the cell coordinates
         position += new Vector3 (-(this.size.x / 2), 0, -(this.size.y / 2)); // Offset by half the dimensions of the grid
         position += new Vector3 (0.5f, 0, 0.5f); // Center of the cell
