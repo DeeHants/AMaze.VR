@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeGen : MonoBehaviour {
-    [Header("Maze dimensions")]
-    [Tooltip("Maze dimensions (in cells)")]
+    [Header ("Maze dimensions")]
+    [Tooltip ("Maze dimensions (in cells)")]
     public Vector2Int size = new Vector2Int (10, 10);
-    [Tooltip("Width of the corridor (in units)")]
+    [Tooltip ("Width of the corridor (in units)")]
     public int width = 1;
-    [Tooltip("Cell position of the start marker")]
+    [Tooltip ("Cell position of the start marker")]
     // Start and finish default to opposite sides, 3 up/down from the corner
     public Vector2Int start = new Vector2Int (0, 2);
-    [Tooltip("Cell position of the start marker")]
+    [Tooltip ("Cell position of the start marker")]
     public Vector2Int finish = new Vector2Int (9, 7);
 
-    [Header("Objects")]
-    [Tooltip("Prefab/asset used for the wall (Must have a Z size that matches the corridor width)")]
+    [Header ("Objects")]
+    [Tooltip ("Prefab/asset used for the wall (Must have a Z size that matches the corridor width)")]
     public GameObject wallObject = null;
 
-    [Tooltip("Object for the start marker")]
+    [Tooltip ("Object for the start marker")]
     public GameObject startObject = null;
-    [Tooltip("Object for the finish marker")]
+    [Tooltip ("Object for the finish marker")]
     public GameObject finishObject = null;
 
     [Flags]
