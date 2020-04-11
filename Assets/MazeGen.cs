@@ -5,6 +5,7 @@ using UnityEngine;
 public class MazeGen : MonoBehaviour {
     public GameObject wallObject = null;
     public Vector2Int size = new Vector2Int (10, 10);
+    public int width = 1;
 
     public GameObject startObject = null;
     public GameObject finishObject = null;
@@ -136,22 +137,22 @@ public class MazeGen : MonoBehaviour {
 
                 // Create the wall sections
                 if ((walls & MazeWall.Up) == MazeWall.Up) { // Top wall
-                    Vector3 wallPosition = position + new Vector3 (0, 0, 0.5f);
+                    Vector3 wallPosition = position + new Vector3 (0, 0, this.width / 2f);
                     Quaternion rotation = Quaternion.Euler (0, 90, 0);
                     GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
                 }
                 if ((walls & MazeWall.Down) == MazeWall.Down && z == 0) { // Bottom wall (only when on the bottom row)
-                    Vector3 wallPosition = position - new Vector3 (0, 0, 0.5f);
+                    Vector3 wallPosition = position - new Vector3 (0, 0, this.width / 2f);
                     Quaternion rotation = Quaternion.Euler (0, 90, 0);
                     GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
                 }
                 if ((walls & MazeWall.Right) == MazeWall.Right) { // Right wall
-                    Vector3 wallPosition = position + new Vector3 (0.5f, 0, 0);
+                    Vector3 wallPosition = position + new Vector3 (this.width / 2f, 0, 0);
                     Quaternion rotation = Quaternion.Euler (0, 0, 0);
                     GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
                 }
                 if ((walls & MazeWall.Left) == MazeWall.Left && x == 0) { // Left wall (only when on the left column)
-                    Vector3 wallPosition = position - new Vector3 (0.5f, 0, 0);
+                    Vector3 wallPosition = position - new Vector3 (this.width / 2f, 0, 0);
                     Quaternion rotation = Quaternion.Euler (0, 0, 0);
                     GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
                 }
@@ -164,10 +165,11 @@ public class MazeGen : MonoBehaviour {
     }
 
     private Vector3 GetCellPosition (Vector2Int cellCoords) {
-        Vector3 cellPosition = new Vector3 (cellCoords.x, 0, cellCoords.y); // The cell's bottom left corner
-        Vector3 objectPosition = this.transform.position; // Poition of the "maze" game object
-        Vector3 objectOffset = new Vector3 (-(this.size.x / 2), 0, -(this.size.y / 2)); // Adjust from 0 - 9 to -5 - +4
-        Vector3 centerOffset = new Vector3 (0.5f, 0, 0.5f); // Center of the cell
-        return cellPosition + objectPosition + objectOffset + centerOffset;
+        Vector3 position = new Vector3 (cellCoords.x, 0, cellCoords.y); // Start off with the cell coordinates
+        position += new Vector3 (-(this.size.x / 2), 0, -(this.size.y / 2)); // Offset by half the dimensions of the grid
+        position += new Vector3 (0.5f, 0, 0.5f); // Center of the cell
+        if (this.width != 1) { position *= this.width; } // Scale for the corridor width
+        position += this.transform.position; // Offset by the position of the "maze" game object
+        return position;
     }
 }
