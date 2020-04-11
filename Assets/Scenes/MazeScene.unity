@@ -319,6 +319,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: {x: 10, y: 10}
   width: 2
+  start: {x: 0, y: 2}
+  finish: {x: 9, y: 7}
   wallObject: {fileID: 2643598850304147602, guid: 09330e51933901d46a0886d13cbd616f,
     type: 3}
   startObject: {fileID: 627424577}

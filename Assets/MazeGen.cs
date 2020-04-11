@@ -8,6 +8,11 @@ public class MazeGen : MonoBehaviour {
     public Vector2Int size = new Vector2Int (10, 10);
     [Tooltip("Width of the corridor (in units)")]
     public int width = 1;
+    [Tooltip("Cell position of the start marker")]
+    // Start and finish default to opposite sides, 3 up/down from the corner
+    public Vector2Int start = new Vector2Int (0, 2);
+    [Tooltip("Cell position of the start marker")]
+    public Vector2Int finish = new Vector2Int (9, 7);
 
     [Header("Objects")]
     [Tooltip("Prefab/asset used for the wall (Must have a Z size that matches the corridor width)")]
@@ -48,13 +53,9 @@ public class MazeGen : MonoBehaviour {
             }
         }
 
-        // Start and finish are opposite sides, 3 up/down from the corner
-        Vector2Int start = new Vector2Int (0, 2);
-        Vector2Int finish = new Vector2Int (this.size.x - 1, this.size.y - 3);
-
         // Move the start and finish markers
-        this.startObject.transform.position = this.GetCellPosition (start);
-        this.finishObject.transform.position = this.GetCellPosition (finish);
+        this.startObject.transform.position = this.GetCellPosition (this.start);
+        this.finishObject.transform.position = this.GetCellPosition (this.finish);
 
         // Generate the map!
         // Start at the finish (!) and randomly move, working backwards to the start
@@ -63,7 +64,7 @@ public class MazeGen : MonoBehaviour {
 
         // Create a stack for the path
         Stack<Vector2Int> path = new Stack<Vector2Int> ();
-        path.Push (finish);
+        path.Push (this.finish);
         int attempts = this.size.x * this.size.y * 10; // Allow 10x the number of cells 
         while (path.Count > 0 && attempts++ > 0) {
             // Current coords/cell
