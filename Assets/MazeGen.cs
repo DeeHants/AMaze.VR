@@ -140,37 +140,16 @@ public class MazeGen : MonoBehaviour {
         }
 
         // Add all the walls
-        // Each cell only adds it's top right walls, unless it's on the bottom row, or left column
         for (int x = 0; x < this.size.x; x++) {
             for (int z = 0; z < this.size.y; z++) {
-                MazeWall walls = cells[x, z].walls;
-                Vector3 position = this.GetCellPosition (new Vector2Int (x, z));
+                MazeCell cell = cells[x, z];
+                MazeWall walls = cell.walls;
 
-                // Create the wall sections
-                if ((walls & MazeWall.Up) == MazeWall.Up) { // Top wall
-                    Vector3 wallPosition = position + new Vector3 (0, 0, this.width / 2f);
-                    Quaternion rotation = Quaternion.Euler (0, 90, 0);
-                    GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-                    wallSection.name = string.Format ("Cell {0},{1}, wall {2}", x, z, "up");
-                }
-                if ((walls & MazeWall.Down) == MazeWall.Down && z == 0) { // Bottom wall (only when on the bottom row)
-                    Vector3 wallPosition = position - new Vector3 (0, 0, this.width / 2f);
-                    Quaternion rotation = Quaternion.Euler (0, 90, 0);
-                    GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-                    wallSection.name = string.Format ("Cell {0},{1}, wall {2}", x, z, "down");
-                }
-                if ((walls & MazeWall.Right) == MazeWall.Right) { // Right wall
-                    Vector3 wallPosition = position + new Vector3 (this.width / 2f, 0, 0);
-                    Quaternion rotation = Quaternion.Euler (0, 0, 0);
-                    GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-                    wallSection.name = string.Format ("Cell {0},{1}, wall {2}", x, z, "right");
-                }
-                if ((walls & MazeWall.Left) == MazeWall.Left && x == 0) { // Left wall (only when on the left column)
-                    Vector3 wallPosition = position - new Vector3 (this.width / 2f, 0, 0);
-                    Quaternion rotation = Quaternion.Euler (0, 0, 0);
-                    GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-                    wallSection.name = string.Format ("Cell {0},{1}, wall {2}", x, z, "left");
-                }
+                // Each cell only adds it's top right walls, unless it's on the bottom row, or left column
+                if (x > 0) { walls &= ~MazeWall.Left; }
+                if (z > 0) { walls &= ~MazeWall.Down; }
+
+                this.AddCellWalls (cell.coords, walls);
             }
         }
     }
@@ -186,5 +165,48 @@ public class MazeGen : MonoBehaviour {
         if (this.width != 1) { position *= this.width; } // Scale for the corridor width
         position += this.transform.position; // Offset by the position of the "maze" game object
         return position;
+    }
+
+    /// <summary>
+    /// Adds the cell walls to a given MazeCell.
+    /// </summary>
+    /// <param name="cell">The MazeCell to add walls to.</param>
+    private void AddCellWalls (MazeCell cell) {
+        this.AddCellWalls (cell.coords, cell.walls);
+    }
+
+    /// <summary>
+    /// Adds the cell walls at a civen cell coordinates.
+    /// </summary>
+    /// <param name="coords">The cell coordinates.</param>
+    /// <param name="walls">The list of walls to add.</param>
+    private void AddCellWalls (Vector2Int coords, MazeWall walls) {
+        Vector3 cellPosition = this.GetCellPosition (new Vector2Int (coords.x, coords.y));
+
+        // Create the wall sections
+        if ((walls & MazeWall.Down) == MazeWall.Down) { // Bottom wall
+            Vector3 wallPosition = cellPosition - new Vector3 (0, 0, this.width / 2f);
+            Quaternion rotation = Quaternion.Euler (0, 90, 0);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "down");
+        }
+        if ((walls & MazeWall.Left) == MazeWall.Left) { // Left wall
+            Vector3 wallPosition = cellPosition - new Vector3 (this.width / 2f, 0, 0);
+            Quaternion rotation = Quaternion.Euler (0, 0, 0);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "left");
+        }
+        if ((walls & MazeWall.Right) == MazeWall.Right) { // Right wall
+            Vector3 wallPosition = cellPosition + new Vector3 (this.width / 2f, 0, 0);
+            Quaternion rotation = Quaternion.Euler (0, 0, 0);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "right");
+        }
+        if ((walls & MazeWall.Up) == MazeWall.Up) { // Top wall
+            Vector3 wallPosition = cellPosition + new Vector3 (0, 0, this.width / 2f);
+            Quaternion rotation = Quaternion.Euler (0, 90, 0);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "up");
+        }
     }
 }
