@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeGen : MonoBehaviour {
-    public GameObject wallObject = null;
+    [Header("Maze dimensions")]
+    [Tooltip("Maze dimensions (in cells)")]
     public Vector2Int size = new Vector2Int (10, 10);
+    [Tooltip("Width of the corridor (in units)")]
     public int width = 1;
 
+    [Header("Objects")]
+    [Tooltip("Prefab/asset used for the wall (Must have a Z size that matches the corridor width)")]
+    public GameObject wallObject = null;
+
+    [Tooltip("Object for the start marker")]
     public GameObject startObject = null;
+    [Tooltip("Object for the finish marker")]
     public GameObject finishObject = null;
 
     [Flags]

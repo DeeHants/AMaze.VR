@@ -317,10 +317,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e48d8f7945ad2544863fb91d545ea92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallObject: {fileID: 2643598850304147602, guid: 09330e51933901d46a0886d13cbd616f,
-    type: 3}
   size: {x: 10, y: 10}
   width: 2
+  wallObject: {fileID: 2643598850304147602, guid: 09330e51933901d46a0886d13cbd616f,
+    type: 3}
   startObject: {fileID: 627424577}
   finishObject: {fileID: 247314253}
 --- !u!1 &534669902
