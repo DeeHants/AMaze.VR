@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeGen : MonoBehaviour {
-    [Header ("Maze dimensions")]
+    [Header ("Maze geometry")]
     [Tooltip ("Maze dimensions (in cells)")]
     public Vector2Int size = new Vector2Int (10, 10);
     [Tooltip ("Width of the corridor (in units)")]
@@ -13,6 +13,8 @@ public class MazeGen : MonoBehaviour {
     public Vector2Int start = new Vector2Int (0, 2);
     [Tooltip ("Cell position of the start marker")]
     public Vector2Int finish = new Vector2Int (9, 7);
+    [Tooltip ("Map seed value")]
+    public int randomSeed = 0;
 
     [Header ("Objects")]
     [Tooltip ("Prefab/asset used for the wall (Must have a Z size that matches the corridor width)")]
@@ -39,7 +41,7 @@ public class MazeGen : MonoBehaviour {
     }
 
     void Start () {
-        System.Random rnd = new System.Random ();
+        System.Random rnd = this.randomSeed != 0 ? new System.Random (this.randomSeed) : new System.Random ();
 
         // Create the empty maze grid
         MazeCell[, ] cells = new MazeCell[this.size.x, this.size.y];
