@@ -188,25 +188,25 @@ public class MazeGen : MonoBehaviour {
             Vector3 wallPosition = cellPosition - new Vector3 (0, 0, this.width / 2f);
             Quaternion rotation = Quaternion.Euler (0, 90, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "down");
+            wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "down");
         }
         if ((walls & MazeWall.Left) == MazeWall.Left) { // Left wall
             Vector3 wallPosition = cellPosition - new Vector3 (this.width / 2f, 0, 0);
             Quaternion rotation = Quaternion.Euler (0, 0, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "left");
+            wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "left");
         }
         if ((walls & MazeWall.Right) == MazeWall.Right) { // Right wall
             Vector3 wallPosition = cellPosition + new Vector3 (this.width / 2f, 0, 0);
             Quaternion rotation = Quaternion.Euler (0, 0, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "right");
+            wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "right");
         }
         if ((walls & MazeWall.Up) == MazeWall.Up) { // Top wall
             Vector3 wallPosition = cellPosition + new Vector3 (0, 0, this.width / 2f);
             Quaternion rotation = Quaternion.Euler (0, 90, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
-            wallSection.name = string.Format ("Cell {0},{1}, wall {2}", coords.x, coords.y, "up");
+            wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "up");
         }
     }
 }
