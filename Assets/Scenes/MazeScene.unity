@@ -312,8 +312,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 458215952}
-  - component: {fileID: 458215953}
   - component: {fileID: 458215954}
+  - component: {fileID: 458215953}
   m_Layer: 0
   m_Name: Maze
   m_TagString: Untagged

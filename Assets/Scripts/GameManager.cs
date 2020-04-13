@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MazePlayer : MonoBehaviour {
+public class GameManager : MonoBehaviour {
     [Tooltip ("Player object")]
     public GameObject playerObject = null;
 
