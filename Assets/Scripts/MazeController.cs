@@ -1,5 +1,5 @@
 using System;
-// using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeController : MonoBehaviour {
@@ -24,6 +24,8 @@ public class MazeController : MonoBehaviour {
     public GameObject startObject = null;
     [Tooltip ("Object for the finish marker")]
     public GameObject finishObject = null;
+
+    private List<GameObject> wallSections = new List<GameObject> ();
 
     public void CreateMaze () {
         // Move the start and finish markers
@@ -75,7 +77,7 @@ public class MazeController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Adds the cell walls at a civen cell coordinates.
+    /// Adds the cell walls at a given cell coordinates.
     /// </summary>
     /// <param name="coords">The cell coordinates.</param>
     /// <param name="walls">The list of walls to add.</param>
@@ -88,24 +90,38 @@ public class MazeController : MonoBehaviour {
             Quaternion rotation = Quaternion.Euler (0, 90, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "down");
+            this.wallSections.Add (wallSection);
         }
         if ((walls & MazeWall.Left) == MazeWall.Left) { // Left wall
             Vector3 wallPosition = cellPosition - new Vector3 (this.width / 2f, 0, 0);
             Quaternion rotation = Quaternion.Euler (0, 0, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "left");
+            this.wallSections.Add (wallSection);
         }
         if ((walls & MazeWall.Right) == MazeWall.Right) { // Right wall
             Vector3 wallPosition = cellPosition + new Vector3 (this.width / 2f, 0, 0);
             Quaternion rotation = Quaternion.Euler (0, 0, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "right");
+            this.wallSections.Add (wallSection);
         }
         if ((walls & MazeWall.Up) == MazeWall.Up) { // Top wall
             Vector3 wallPosition = cellPosition + new Vector3 (0, 0, this.width / 2f);
             Quaternion rotation = Quaternion.Euler (0, 90, 0);
             GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "up");
+            this.wallSections.Add (wallSection);
         }
+    }
+
+    /// <summary>
+    /// Remove all wall sections, ready to start a new game
+    /// </summary>
+    public void RemoveWalls () {
+        foreach (GameObject wallSection in this.wallSections) {
+            Destroy (wallSection);
+        }
+        this.wallSections.Clear ();
     }
 }
