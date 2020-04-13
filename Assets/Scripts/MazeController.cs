@@ -25,7 +25,7 @@ public class MazeController : MonoBehaviour {
     [Tooltip ("Object for the finish marker")]
     public GameObject finishObject = null;
 
-    void Start () {
+    public void CreateMaze () {
         // Move the start and finish markers
         this.startObject.transform.position = this.GetCellPosition (this.start);
         this.finishObject.transform.position = this.GetCellPosition (this.finish);

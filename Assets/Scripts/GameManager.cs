@@ -6,12 +6,21 @@ public class GameManager : MonoBehaviour {
     [Tooltip ("Player object")]
     public GameObject playerObject = null;
 
-    void Start () {
-        if (playerObject != null) {
-            // We need a reference to the maze generator
-            MazeController maze = this.GetComponent<MazeController> ();
+    private MazeController maze = null;
 
-            // Get the start position, and move the player object to that location
+    void Start () {
+        this.maze = this.GetComponent<MazeController> ();
+
+        // Create the initial maze
+        this.NewGame ();
+    }
+
+    void NewGame () {
+        // Create the new maze
+        this.maze.CreateMaze ();
+
+        // Move the player to the start position
+        if (playerObject != null) {
             Vector3 startPosition = maze.GetCellPosition (maze.start);
             playerObject.transform.position = startPosition;
         }
