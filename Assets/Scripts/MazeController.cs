@@ -19,6 +19,8 @@ public class MazeController : MonoBehaviour {
     [Header ("Objects")]
     [Tooltip ("Prefab/asset used for the wall (Must have a Z size that matches the corridor width)")]
     public GameObject wallObject = null;
+    [Tooltip ("Container of all the wall sections")]
+    public GameObject wallContainer = null;
 
     [Tooltip ("Object for the start marker")]
     public GameObject startObject = null;
@@ -55,6 +57,16 @@ public class MazeController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Gets the container of the wall sections.
+    /// </summary>
+    /// <value>A Transform object.</value>
+    public Transform container {
+        get{
+            return this.wallContainer ? this.wallContainer.transform : this.transform;
+        }
+    }
+
     private Vector3 GetCellPosition (MazeCell cell) {
         return this.GetCellPosition (cell.coords);
     }
@@ -64,7 +76,7 @@ public class MazeController : MonoBehaviour {
         position += new Vector3 (-(this.size.x / 2), 0, -(this.size.y / 2)); // Offset by half the dimensions of the grid
         position += new Vector3 (0.5f, 0, 0.5f); // Center of the cell
         if (this.width != 1) { position *= this.width; } // Scale for the corridor width
-        position += this.transform.position; // Offset by the position of the "maze" game object
+        position += this.container.position; // Offset by the position of the "maze" game object or wall container
         return position;
     }
 
@@ -83,33 +95,34 @@ public class MazeController : MonoBehaviour {
     /// <param name="walls">The list of walls to add.</param>
     private void AddCellWalls (Vector2Int coords, MazeWall walls) {
         Vector3 cellPosition = this.GetCellPosition (new Vector2Int (coords.x, coords.y));
+        Transform container = this.container;
 
         // Create the wall sections
         if ((walls & MazeWall.Down) == MazeWall.Down) { // Bottom wall
             Vector3 wallPosition = cellPosition - new Vector3 (0, 0, this.width / 2f);
             Quaternion rotation = Quaternion.Euler (0, 90, 0);
-            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, container);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "down");
             this.wallSections.Add (wallSection);
         }
         if ((walls & MazeWall.Left) == MazeWall.Left) { // Left wall
             Vector3 wallPosition = cellPosition - new Vector3 (this.width / 2f, 0, 0);
             Quaternion rotation = Quaternion.Euler (0, 0, 0);
-            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, container);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "left");
             this.wallSections.Add (wallSection);
         }
         if ((walls & MazeWall.Right) == MazeWall.Right) { // Right wall
             Vector3 wallPosition = cellPosition + new Vector3 (this.width / 2f, 0, 0);
             Quaternion rotation = Quaternion.Euler (0, 0, 0);
-            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, container);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "right");
             this.wallSections.Add (wallSection);
         }
         if ((walls & MazeWall.Up) == MazeWall.Up) { // Top wall
             Vector3 wallPosition = cellPosition + new Vector3 (0, 0, this.width / 2f);
             Quaternion rotation = Quaternion.Euler (0, 90, 0);
-            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, this.transform);
+            GameObject wallSection = Instantiate (this.wallObject, wallPosition, rotation, container);
             wallSection.name = string.Format ("Cell {0}, wall {1}", coords, "up");
             this.wallSections.Add (wallSection);
         }

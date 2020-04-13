@@ -59,9 +59,9 @@ public class GameManager : MonoBehaviour {
 
             if (this.state == GameState.Startup) {
                 // Hide it immediately
-                Vector3 scale = this.maze.transform.localScale;
+                Vector3 scale = this.maze.container.transform.localScale;
                 scale.y = 0;
-                this.maze.transform.localScale = scale;
+                this.maze.container.transform.localScale = scale;
             } else if (this.state == GameState.HidingComplete) {
                 // Clear up the old maze
                 maze.RemoveWalls ();
@@ -97,7 +97,8 @@ public class GameManager : MonoBehaviour {
     /// Checks the game state, and whether it needs to be hidden or shown.
     /// </summary>
     void CheckMazeHeight () {
-        Vector3 scale = this.transform.localScale;
+        Transform container = maze.container;
+        Vector3 scale = container.localScale;
         if (this.state == GameState.Hiding) {
             // Decrease the height of the maze object
             scale.y -= this.shrinkSpeed * Time.deltaTime;
@@ -114,6 +115,6 @@ public class GameManager : MonoBehaviour {
                 this.state = GameState.ShowingComplete;
             }
         }
-        if (this.transform.localScale.y != scale.y) { this.transform.localScale = scale; }
+        if (container.localScale.y != scale.y) { container.localScale = scale; }
     }
 }
