@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ViewMover : MonoBehaviour {
+public class PlayerController : MonoBehaviour {
     public int speed = 1;
 
     // Update is called once per frame
