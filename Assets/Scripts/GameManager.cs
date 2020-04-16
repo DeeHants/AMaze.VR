@@ -15,6 +15,7 @@ internal enum GameState {
 /// <summary>
 /// Manages the game state and restarts.
 /// </summary>
+[RequireComponent (typeof (MazeController))]
 public class GameManager : MonoBehaviour {
     [Tooltip ("Speed at which the walls hide or show at the end/start of the game")]
     public float shrinkSpeed = 0.2f;
