@@ -1,33 +1,41 @@
 using System;
 using UnityEngine;
 
+[RequireComponent (typeof (CharacterController))]
 public class PlayerController : MonoBehaviour {
-    public int speed = 1;
+    [Tooltip ("Movement speed (in units/s)")]
+    public float moveSpeed = 3;
+    [Tooltip ("Rotational speed (in degrees/s)")]
+    public float rotateSpeed = 50;
 
-    // Update is called once per frame
+    [Tooltip ("Use the camera as the forward direction")]
+    public bool cameraForward = true;
+
+    private CharacterController characterController = null;
+
+    void Start () {
+        // Get the character controller
+        this.characterController = this.GetComponent<CharacterController> ();
+    }
+
     void Update () {
         // Get input data from keyboard or controller
-        double directionalSpeed = Input.GetAxis ("Vertical");
-        double rotationalSpeed = Input.GetAxis ("Horizontal");
-        double multiplier = this.speed * Time.deltaTime;
+        float forwardSpeed = Input.GetAxis ("Vertical");
+        float rotationalSpeed = Input.GetAxis ("Horizontal2");
 
-        // Get the current postion and rotation
-        Vector3 position = this.transform.position;
-        Vector3 rotation = this.transform.rotation.eulerAngles;
+        // Get the object that defines our forward direction
+        Transform mainObject = this.transform;
+        if (this.cameraForward) { mainObject = mainObject.Find ("Main Camera"); }
 
-        // Rotate based on the horizontal input
-        rotation.y += (float) (rotationalSpeed * 25 * multiplier);
-        Transform camera = this.transform.Find ("Main Camera");
-        double rotationRadian = Math.PI * (camera.transform.rotation.eulerAngles.y) / 180.0;
+        // Move forward and sideways, making sure we stay on the ground
+        Vector3 moveDirection = mainObject.forward * forwardSpeed;
+        moveDirection *= this.moveSpeed * Time.deltaTime;
+        moveDirection.y = 0; // No flying!
+        this.characterController.Move (moveDirection);
 
-        // Use trigonometry to adjust the position based ont he current direction
-        double xVector = Math.Sin (rotationRadian);
-        double zVector = Math.Cos (rotationRadian);
-        position.x += (float) (directionalSpeed * xVector * multiplier);
-        position.z += (float) (directionalSpeed * zVector * multiplier);
-
-        // Update the object
-        this.transform.position = position;
-        this.transform.rotation = Quaternion.Euler (rotation);
+        // Rotate
+        Vector3 rotateDirection = new Vector3 (0, rotationalSpeed, 0);
+        rotateDirection *= this.rotateSpeed * Time.deltaTime;
+        this.transform.Rotate (rotateDirection, Space.Self);
     }
 }
