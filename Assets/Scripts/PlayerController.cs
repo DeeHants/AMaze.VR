@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour {
     void Update () {
         // Get input data from keyboard or controller
         float forwardSpeed = Input.GetAxis ("Vertical");
+        float sidewaysSpeed = Input.GetAxis ("Horizontal");
         float rotationalSpeed = Input.GetAxis ("Horizontal2");
 
         // Get the object that defines our forward direction
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour {
 
         // Move forward and sideways, making sure we stay on the ground
         Vector3 moveDirection = mainObject.forward * forwardSpeed;
+        moveDirection += mainObject.right * sidewaysSpeed;
         moveDirection *= this.moveSpeed * Time.deltaTime;
         moveDirection.y = 0; // No flying!
         this.characterController.Move (moveDirection);
