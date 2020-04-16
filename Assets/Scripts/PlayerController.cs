@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour {
 
     private CharacterController characterController = null;
 
+    private float fallSpeed = 0;
+
     void Start () {
         // Get the character controller
         this.characterController = this.GetComponent<CharacterController> ();
@@ -29,10 +31,19 @@ public class PlayerController : MonoBehaviour {
         if (this.cameraForward) { mainObject = mainObject.Find ("Main Camera"); }
 
         // Move forward and sideways, making sure we stay on the ground
-        Vector3 moveDirection = mainObject.forward * forwardSpeed;
-        moveDirection += mainObject.right * sidewaysSpeed;
-        moveDirection *= this.moveSpeed * Time.deltaTime;
-        moveDirection.y = 0; // No flying!
+        Vector3 moveDirection = Vector3.zero;
+        if (this.characterController.isGrounded) {
+            moveDirection += mainObject.forward * forwardSpeed;
+            moveDirection += mainObject.right * sidewaysSpeed;
+            moveDirection *= this.moveSpeed * Time.deltaTime;
+            // No flying!
+            this.fallSpeed = 0;
+            moveDirection.y = 0;
+        } else {
+            // Obey the laws of gravity!
+            this.fallSpeed += Physics.gravity.y * Time.deltaTime;
+            moveDirection.y = this.fallSpeed * Time.deltaTime;
+        }
         this.characterController.Move (moveDirection);
 
         // Rotate
